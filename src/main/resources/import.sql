@@ -1,0 +1,11 @@
+insert into clientes (id, name, surname, email, creation_date) values(1, 'John', 'Doe', 'john.doe@gmail.com', '2019-01-02');
+insert into clientes (id, name, surname, email, creation_date) values(2, 'Tom', 'Sullivan', 'tom.sull@gmail.com', '2019-01-15');
+insert into clientes (id, name, surname, email, creation_date) values(3, 'Paul', 'LeClerk', 'paulcl3rk@hotmail.com', '2019-02-19');
+insert into clientes (id, name, surname, email, creation_date) values(4, 'Sarah', 'Parson', 'sarahparson@acme.com', '2019-02-22');
+insert into clientes (id, name, surname, email, creation_date) values(5, 'Gillian', 'Ferguson', 'giferguson012@gmail.com', '2019-03-04');
+insert into clientes (id, name, surname, email, creation_date) values(6, 'Matthew', 'Robins', 'matthew.robbins@gmail.com', '2019-03-05');
+insert into clientes (id, name, surname, email, creation_date) values(7, 'Jessica', 'Fowler', 'jessica.fowler@gmail.com', '2019-03-12');
+insert into clientes (id, name, surname, email, creation_date) values(8, 'Christine', 'Gutierrez', 'christgurri2019@gmail.com', '2019-03-23');
+insert into clientes (id, name, surname, email, creation_date) values(9, 'Pierre', 'De la Fontaine', 'pierre.armee@gmail.com', '2019-03-30');
+insert into clientes (id, name, surname, email, creation_date) values(10, 'Carmen', 'Sánchez', 'carmen.sanchez@gmail.com', '2019-03-30');
+insert into clientes (id, name, surname, email, creation_date) values(11, 'Klim', 'Obenhorff', 'klim.obenhrf399@hotmail.com', '2019-04-01');
