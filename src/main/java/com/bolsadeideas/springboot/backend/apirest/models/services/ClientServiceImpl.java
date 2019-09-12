@@ -3,6 +3,8 @@ package com.bolsadeideas.springboot.backend.apirest.models.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,17 +12,23 @@ import com.bolsadeideas.springboot.backend.apirest.models.dao.IClientRepository;
 import com.bolsadeideas.springboot.backend.apirest.models.entity.Client;
 
 @Service
-public class ClientServiceImpl implements IClientService{
+public class ClientServiceImpl implements IClientService {
 
 	@Autowired
 	IClientRepository clienteRepository;
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public Iterable<Client> findAll() {
 		return clienteRepository.findAll();
 	}
 	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<Client> findAll(Pageable pageable) {
+		return clienteRepository.findAll(pageable);
+	}
+
 	public Optional<Client> findById(Long id) {
 		return clienteRepository.findById(id);
 	}
@@ -35,5 +43,5 @@ public class ClientServiceImpl implements IClientService{
 	public void deleteById(Long id) {
 		clienteRepository.deleteById(id);
 	}
-	
+
 }

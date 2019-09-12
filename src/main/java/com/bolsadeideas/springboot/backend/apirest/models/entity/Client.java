@@ -12,6 +12,9 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "clientes")
@@ -21,24 +24,33 @@ public class Client implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(nullable = false)
+	@NotNull(message = "cannot be empty")
+	@Size(min = 4, max = 20, message = "must contain between 4 and 20 characters")
 	private String name;
 
+	@NotNull(message = "cannot be empty")
 	private String surname;
 
 	@Column(nullable = false, unique = true)
+	@NotNull(message = "cannot be empty")
+	@Email(message = " is not a valid email")
 	private String email;
 
 	@Column(name = "creation_date")
 	@Temporal(TemporalType.DATE)
 	private Date createdAt;
 
+	@Column(name = "birthdate")
+	@Temporal(TemporalType.DATE)
+	private Date birthdate;
+
 	@PrePersist
 	public void beforeCreate() {
 		createdAt = new Date();
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -79,10 +91,18 @@ public class Client implements Serializable {
 		this.createdAt = createdAt;
 	}
 
+	public Date getBirthdate() {
+		return birthdate;
+	}
+
+	public void setBirthdate(Date birthday) {
+		this.birthdate = birthday;
+	}
+
 	@Override
 	public String toString() {
-		return "Cliente [id=" + id + ", name=" + name + ", surname=" + surname + ", email=" + email + ", createdAt="
-				+ createdAt + "]";
+		return "Client [id=" + id + ", name=" + name + ", surname=" + surname + ", email=" + email + ", createdAt="
+				+ createdAt + ", birthdate=" + birthdate + "]";
 	}
 
 }
