@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.stereotype.Component;
 
 import com.bolsadeideas.springboot.backend.apirest.models.entity.User;
-import com.bolsadeideas.springboot.backend.apirest.models.services.IUsuarioService;
+import com.bolsadeideas.springboot.backend.apirest.models.services.IUserService;
 
 /**
  * Usado para añadir información adicional al token
@@ -22,14 +22,14 @@ import com.bolsadeideas.springboot.backend.apirest.models.services.IUsuarioServi
 public class TokenEnhancerImpl implements TokenEnhancer{
 
 	@Autowired
-	private IUsuarioService usuarioService;
+	private IUserService usuarioService;
 	
 	@Override
 	public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
 		User user = usuarioService.findByUsername(authentication.getName());
 		Map<String, Object> data = new HashMap<>();
 		data.put("extra", String.format("Hi: %s", authentication.getName()));
-		data.put("usuario", String.format("%s:%s", user.getId(), user.getUsername()));
+		data.put("user", String.format("%s:%s", user.getId(), user.getUsername()));
 		((DefaultOAuth2AccessToken)accessToken).setAdditionalInformation(data);
 		return accessToken;
 	}

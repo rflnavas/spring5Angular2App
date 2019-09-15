@@ -1,8 +1,8 @@
 
 /*USUARIOS*/
 /* Creamos algunos usuarios con sus roles */
-INSERT INTO dusers (username, password, enabled, name, email) VALUES ('rafa','$2a$10$017l6J8mOfH9VSy16p7KLOiWWk4bd4H/Wl9StiBRjhBocGiVhVBle',1, 'Rafa','profesor@bolsadeideas.com');
-INSERT INTO dusers (username, password, enabled, name, email) VALUES ('admin','$2a$10$ohr28bkRmaRPNmahcIrIqemVle1r6myCw6i63ACk7i204AHMMt3s2',1, 'David','jhon.doe@bolsadeideas.com');
+INSERT INTO dusers (username, password, enabled, name, email) VALUES ('blake','pi3141592',1, 'Blake','profesor@bolsadeideas.com');
+INSERT INTO dusers (username, password, enabled, name, email) VALUES ('admin','$2a$10$ZPVjRJjc9N5qon.jtQkbuOnHae1oQT.EsMGKaUtpwJ3uqLRwzs9.q',1, 'David','jhon.doe@bolsadeideas.com');
 
 /*ROLES*/
 INSERT INTO roles (rolename) VALUES ('ROLE_USER');

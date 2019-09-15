@@ -1,8 +1,8 @@
 package com.bolsadeideas.springboot.backend.apirest.models.services;
 
-import org.springframework.security.core.userdetails.UserDetails;
+import com.bolsadeideas.springboot.backend.apirest.models.entity.User;
 
 public interface IUserService {
-	
-	UserDetails findByUsername(String username);
+	User findByUsername(String username);
+	User save(User user);
 }

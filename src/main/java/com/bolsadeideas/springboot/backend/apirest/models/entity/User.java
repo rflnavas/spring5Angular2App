@@ -1,11 +1,11 @@
 package com.bolsadeideas.springboot.backend.apirest.models.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -35,7 +34,7 @@ public class User {
 	
 	@NotNull
 	@Column(unique=true, length=24)
-	@Size(min=6,max=24)
+	@Size(min=4,max=24)
 	private String username;
 	
 	private String name;
@@ -43,14 +42,33 @@ public class User {
 	@Email
 	private String email;
 	
-	@ManyToMany(cascade=CascadeType.ALL)
+	/**
+	 * In order to be able to save new users with existing rules we must use this kind of cascade. 
+	 * Otherwise, we will bump into PersistentObjectException.
+	 * Spring Data's getXXXX methods returns detached objects by default.
+	 */
+	@ManyToMany(cascade=CascadeType.MERGE)
 	@JoinTable(name="dusers_roles", 
 		joinColumns=@JoinColumn(name="user_id", nullable=false),
 		inverseJoinColumns=@JoinColumn(name="role_id", nullable=false)
 		//uniqueConstraints= {@UniqueConstraint(columnNames= {"user_id", "role_id"})}
 	)
-	private Set<Role> roles;
+	private Set<Role> roles = new HashSet<>();
 
+	public User() {
+	}
+
+	public User( @NotNull @Size(min = 4, max = 24) String username,
+		@NotNull String password,String name,
+		@Email String email) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.name = name;
+		this.email = email;
+		this.enabled = true;
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -101,6 +119,10 @@ public class User {
 
 	public Set<Role> getRoles() {
 		return roles;
+	}
+	
+	public void addRole(Role role) {
+		roles.add(role);
 	}
 
 	public void setRoles(Set<Role> roles) {

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +31,8 @@ import com.bolsadeideas.springboot.backend.apirest.models.entity.Client;
 import com.bolsadeideas.springboot.backend.apirest.models.services.IClientService;
 import com.bolsadeideas.springboot.backend.apirest.utils.ResponseUtils;
 
-@CrossOrigin(origins = { "http://localhost:4200" })
+@CrossOrigin(origins = { "http://localhost:4200" }, 
+	methods = {RequestMethod.GET,RequestMethod.PUT, RequestMethod.PUT, RequestMethod.DELETE})
 @RestController
 @RequestMapping(path = "/api")
 public class ClientRestController {
@@ -55,6 +57,7 @@ public class ClientRestController {
 		return clienteService.findAll(PageRequest.of(page.get(), 5));
 	}
 
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@GetMapping(path = "/clients/{id}")
 	@ResponseStatus(HttpStatus.OK) // Por defecto ya lo hace por lo que es redundante
 	public ResponseEntity<?> getClient(@PathVariable long id) {
@@ -74,8 +77,9 @@ public class ClientRestController {
 	}
 
 	@PostMapping(path = "/clients")
+	@Secured({"ROLE_ADMIN"})
 	/*
-	 * Intercept the client instance in order to check whether such object is valid
+	 * @Valid:Intercepts the client instance in order to check whether such object is valid
 	 * before this method is invoked.
 	 */
 	public ResponseEntity<?> createClient(@Valid @RequestBody Client client, BindingResult result) {
@@ -109,6 +113,7 @@ public class ClientRestController {
 
 	@DeleteMapping(path = "/clients/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Secured({"ROLE_ADMIN"})
 	public ResponseEntity<?> deleteClientById(@PathVariable long id) {
 		Map<String, Object> response = new HashMap<>();
 		try {
@@ -125,6 +130,7 @@ public class ClientRestController {
 
 	@PutMapping(path = "/clients/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
+	@Secured({"ROLE_ADMIN"})
 	public ResponseEntity<?> updateClient(@Valid @RequestBody Client client, @PathVariable long id,
 			BindingResult result) {
 		Optional<Client> optClient = clienteService.findById(id);// .orElseThrow(()->new ElementNotFound("There was a

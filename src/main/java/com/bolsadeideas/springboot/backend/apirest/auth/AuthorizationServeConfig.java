@@ -17,6 +17,8 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+import com.bolsadeideas.springboot.backend.apirest.config.JWTConfigProperties;
+
 /**
  * Tenemos que realizar una doble autenticación. No sólo autetica mos los
  * usuarios sino también las aplicaciones a las que se conectan con el Back
@@ -28,6 +30,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @EnableAuthorizationServer
 public class AuthorizationServeConfig extends AuthorizationServerConfigurerAdapter {
 
+	private static final int ONE_HOUR = 60 * 60;
+	private static final int ONE_DAY = ONE_HOUR * 24;
+	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
@@ -36,7 +41,13 @@ public class AuthorizationServeConfig extends AuthorizationServerConfigurerAdapt
 	private AuthenticationManager authManager;
 	
 	@Autowired
+	private AppUserDetailsService appUserDetailsService;
+	
+	@Autowired
 	private TokenEnhancerImpl tokenEnhancer;
+	
+	@Autowired
+	private JWTConfigProperties jwtConfigProps;
 
 	/**
 	 * Validar la aplicacion
@@ -57,8 +68,8 @@ public class AuthorizationServeConfig extends AuthorizationServerConfigurerAdapt
 			.secret(passwordEncoder.encode("12345"))
 			.scopes("read", "write")
 			.authorizedGrantTypes("password", "refresh_token")
-			.refreshTokenValiditySeconds(3600)
-			.refreshTokenValiditySeconds(3600);
+			.accessTokenValiditySeconds(ONE_HOUR)
+			.refreshTokenValiditySeconds(ONE_DAY);
 	}
 
 	@Override
@@ -71,7 +82,9 @@ public class AuthorizationServeConfig extends AuthorizationServerConfigurerAdapt
 		 * relacionadas con el token y traducir valores codificados dentro de JWT.
 		 * Tambien de validar el token de acceso y que las firmas sean correctas.
 		 */
-		endpoints.authenticationManager(authManager).tokenStore(tokenStore())
+		endpoints.authenticationManager(authManager)
+				.tokenStore(tokenStore())
+				.userDetailsService(appUserDetailsService)
 				.accessTokenConverter(accessTokenConverter())
 				.tokenEnhancer(tokenEnhancerChain);
 	}
@@ -84,7 +97,9 @@ public class AuthorizationServeConfig extends AuthorizationServerConfigurerAdapt
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-		jwtAccessTokenConverter.setSigningKey("my.scret.sign.112358132134");//Siempre se guarda en el lado del servidor y NO del cliente.
+		//Siempre se guarda en el lado del servidor y NO del cliente.
+		jwtAccessTokenConverter.setSigningKey(jwtConfigProps.getPrivateKey());
+		jwtAccessTokenConverter.setVerifierKey(jwtConfigProps.getPublicKey());
 		return jwtAccessTokenConverter;
 	}
 
